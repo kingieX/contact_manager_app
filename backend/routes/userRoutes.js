@@ -3,6 +3,7 @@ const { registerUser, loginUser, currentUser } = require("../controllers/userCon
 
 const router = express.Router();
 
+// route to register
 router.post("/register", registerUser);
 
 router.post("/login", loginUser);
