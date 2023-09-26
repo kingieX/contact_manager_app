@@ -1,10 +1,12 @@
 const asyncHandler = require("express-async-handler");
+const Contact = require("../models/contactModel");
 
 // Get all contacts
 // @route GET /api/contacts
 // @access public
 const getContacts = asyncHandler(async (req, res) => {
-    res.json({message: "Get all contacts"}).status(200);
+    const contacts = await Contact.find();
+    res.json(contacts).status(200);
 });
 
 // Create New contact
@@ -16,28 +18,55 @@ const createContact = asyncHandler(async (req, res) => {
     if(!name || !email || !phoneNo) {
         throw new Error("Please input all the details")
     }
-    res.json({message: "Create contact"}).status(201);
+    const contact = await Contact.create({
+        name,
+        email,
+        phoneNo,
+    });
+    res.json(contact).status(201);
 });
 
 // Get contact
 // @route GET /api/contacts/:id
 // @access public
 const getContact = asyncHandler(async (req, res) => {
-    res.json({message: `Get contact for ${req.params.id}`}).status(200);
+    const contact = await Contact.findById(req.params.id);
+    if(!contact) {
+        res.status(404);
+        throw new Error("Contact not found!");
+    }
+    res.json(contact).status(200);
 });
 
 // Update contact
 // @route PUT /api/contacts/:id
 // @access public
 const updateContact = asyncHandler(async (req, res) => {
-    res.json({message: `Update contact for ${req.params.id}`}).status(200);
+    const contact = await Contact.findById(req.params.id);
+    if (!contact) {
+        throw new Error("Contact not found!");
+    }
+
+    const updatedContact = await Contact.findByIdAndUpdate(
+        req.params.id,
+        req.body,
+        {new: true}
+    );
+
+    res.json(updatedContact).status(200);
 });
 
 // Delete contact
 // @route DELETE /api/contacts/:id
 // @access public
 const deleteContact = asyncHandler(async (req, res) => {
-    res.json({message: `delete contact for ${req.params.id}`}).status(200);
+    const contact = await Contact.findById(req.params.id);
+    if (!contact) {
+        throw new Error("Contact not found!");
+    }
+
+    const deletedContact = await Contact.deleteOne();
+    res.json(deletedContact).status(200);
 });
 
 
