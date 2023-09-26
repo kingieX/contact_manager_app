@@ -11,6 +11,7 @@ const registerUser = asyncHandler(async (req, res) => {
         res.status(400);
         throw new Error("All fields are mandatory!");
     }
+    // check if a user already exist
     const userAvailable = await User.findOne({ email });
     if(userAvailable) {
         res.status(400);
@@ -27,6 +28,7 @@ const registerUser = asyncHandler(async (req, res) => {
     });
 
     console.log(`User created ${user}`);
+    // send user info to database
     if(user) {
         res.status(201).json({ _id: user.id, email: user.email })
     } else {
@@ -51,3 +53,5 @@ const currentUser = asyncHandler(async (req, res) => {
 });
 
 module.exports = { registerUser, loginUser, currentUser };
+
+ggggggggggggggg
